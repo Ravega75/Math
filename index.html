@@ -1,524 +1,632 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Math Neon Rush</title>
-  
-  <!-- Carga de Tailwind CSS -->
-  <script src="https://cdn.tailwindcss.com"></script>
-  
-  <!-- Configuración de Tailwind para usar Inter como fuente principal y personalizar colores -->
-  <script>
-    tailwind.config = {
-      theme: {
-        extend: {
-          fontFamily: {
-            sans: ['Inter', 'sans-serif'],
-            mono: ['ui-monospace', 'SFMono-Regular', 'Menlo', 'Monaco', 'Consolas', "Liberation Mono", "Courier New", 'monospace'],
-          }
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Carrera Espacial de Multiplicación</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Space+Grotesk:wght@400;700&display=swap');
+
+        body {
+            font-family: 'Space Grotesk', sans-serif;
+            background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
+            color: white;
+            min-height: 100vh;
+            overflow-x: hidden;
         }
-      }
-    }
-  </script>
-  
-  <!-- Fuente Inter de Google Fonts -->
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
-  
-  <!-- Iconos de Phosphor (Alternativa ligera a Lucide) -->
-  <script src="https://unpkg.com/@phosphor-icons/web"></script>
 
-  <style>
-    body {
-      font-family: 'Inter', sans-serif;
-      background-color: #020617; /* slate-950 */
-      color: #f8fafc; /* slate-50 */
-    }
+        .title-font {
+            font-family: 'Press Start 2P', cursive;
+            text-shadow: 2px 2px 0px #000;
+        }
 
-    /* Scrollbar personalizada */
-    .custom-scrollbar::-webkit-scrollbar { width: 6px; }
-    .custom-scrollbar::-webkit-scrollbar-track { background: transparent; }
-    .custom-scrollbar::-webkit-scrollbar-thumb { background-color: #334155; border-radius: 10px; }
+        .btn-neon {
+            background-color: transparent;
+            border: 2px solid #00ffcc;
+            color: #00ffcc;
+            box-shadow: 0 0 10px #00ffcc, inset 0 0 10px #00ffcc;
+            transition: all 0.3s ease;
+        }
 
-    /* Clases de utilidad para ocultar/mostrar secciones */
-    .hidden { display: none !important; }
-    
-    /* Animaciones suaves para feedback */
-    @keyframes pulse-bg-green {
-      0%, 100% { background-color: rgba(34, 197, 94, 0); }
-      50% { background-color: rgba(34, 197, 94, 0.2); }
-    }
-    @keyframes pulse-bg-red {
-      0%, 100% { background-color: rgba(239, 68, 68, 0); }
-      50% { background-color: rgba(239, 68, 68, 0.2); }
-    }
-    .animate-feedback-correct { animation: pulse-bg-green 0.6s ease-out; }
-    .animate-feedback-wrong { animation: pulse-bg-red 0.6s ease-out; }
-  </style>
+        .btn-neon:hover {
+            background-color: #00ffcc;
+            color: #000;
+            box-shadow: 0 0 20px #00ffcc, inset 0 0 20px #00ffcc;
+        }
+
+        .star-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="200" height="200"><circle cx="10" cy="10" r="1" fill="white" opacity="0.5"/><circle cx="50" cy="80" r="2" fill="white" opacity="0.8"/><circle cx="120" cy="30" r="1.5" fill="white" opacity="0.6"/><circle cx="180" cy="150" r="1" fill="white" opacity="0.4"/><circle cx="90" cy="180" r="2" fill="yellow" opacity="0.7"/></svg>') repeat;
+            animation: animateStars 50s linear infinite;
+        }
+
+        @keyframes animateStars {
+            from { background-position: 0 0; }
+            to { background-position: -1000px 1000px; }
+        }
+
+        .ship-track {
+            border-bottom: 2px dashed rgba(255,255,255,0.2);
+            position: relative;
+            height: 60px;
+            margin-bottom: 15px;
+        }
+
+        .ship {
+            position: absolute;
+            left: 0;
+            top: 50%;
+            transform: translateY(-50%);
+            transition: left 0.5s ease-out;
+            font-size: 2rem;
+            filter: drop-shadow(0 0 5px rgba(255,255,255,0.8));
+        }
+
+        .medal-gold { color: #FFD700; text-shadow: 0 0 10px #FFD700; }
+        .medal-silver { color: #C0C0C0; text-shadow: 0 0 10px #C0C0C0; }
+        .medal-bronze { color: #CD7F32; text-shadow: 0 0 10px #CD7F32; }
+
+        .vibrate {
+            animation: vibrate-anim 0.3s linear infinite both;
+        }
+
+        @keyframes vibrate-anim {
+            0% { transform: translate(0) }
+            20% { transform: translate(-2px, 2px) }
+            40% { transform: translate(-2px, -2px) }
+            60% { transform: translate(2px, 2px) }
+            80% { transform: translate(2px, -2px) }
+            100% { transform: translate(0) }
+        }
+
+        .floating {
+            animation: float 3s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+            100% { transform: translateY(0px); }
+        }
+    </style>
 </head>
-<body class="selection:bg-fuchsia-500/30 overflow-x-hidden">
+<body class="p-4 md:p-8 flex flex-col items-center">
+    <div class="star-bg"></div>
 
-  <!-- VISTA: LOGIN -->
-  <div id="view-login" class="min-h-screen flex items-center justify-center p-4">
-    <div class="max-w-md w-full bg-slate-900 border border-slate-800 rounded-2xl shadow-2xl p-8 relative overflow-hidden">
-      <!-- Background decoration -->
-      <div class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-cyan-500 via-purple-500 to-fuchsia-500"></div>
-      <div class="absolute -top-24 -right-24 w-48 h-48 bg-fuchsia-500/10 rounded-full blur-3xl"></div>
-      
-      <div class="text-center mb-8 relative z-10">
-        <i class="ph ph-rocket text-cyan-400 text-6xl mb-4 animate-bounce inline-block"></i>
-        <h1 class="text-4xl font-extrabold tracking-tight text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-fuchsia-500">
-          Math Neon Rush
+    <header class="text-center mb-8 w-full">
+        <h1 class="text-3xl md:text-5xl font-bold title-font text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-pink-600 mb-2 mt-4">
+            🚀 Carrera Espacial 🛸
         </h1>
-        <p class="text-slate-400 mt-2 text-sm">Entrenamiento multiplicativo multijugador</p>
-      </div>
+        <p class="text-lg text-gray-300">¡Domina la multiplicación para llegar a las estrellas!</p>
+    </header>
 
-      <form id="login-form" class="relative z-10">
-        <div class="mb-6">
-          <label for="player-name-input" class="block text-sm font-medium text-slate-300 mb-2">
-            Tu Apodo Ciberespacial
-          </label>
-          <input
-            type="text"
-            id="player-name-input"
-            maxlength="12"
-            required
-            placeholder="Ej. MathNinja"
-            class="w-full bg-slate-950 border border-slate-700 rounded-xl px-4 py-3 text-white placeholder-slate-600 focus:outline-none focus:ring-2 focus:ring-cyan-500 focus:border-transparent transition-all"
-          />
-        </div>
-        <button
-          type="submit"
-          id="btn-join"
-          disabled
-          class="w-full bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-400 hover:to-blue-500 text-white font-bold py-3 px-4 rounded-xl shadow-lg shadow-cyan-500/30 transform transition-all active:scale-95 flex justify-center items-center gap-2 mb-4 disabled:opacity-50 disabled:cursor-not-allowed"
-        >
-          <span id="btn-join-text">Conectando...</span>
-        </button>
+    <main id="app-container" class="w-full max-w-6xl flex flex-col items-center">
         
-        <button
-          type="button"
-          id="btn-teacher-mode"
-          class="w-full bg-slate-800 hover:bg-slate-700 border border-slate-700 text-slate-300 font-bold py-3 px-4 rounded-xl transition-all flex justify-center items-center gap-2"
-        >
-          <i class="ph ph-monitor-play text-xl"></i>
-          Proyectar Pizarra del Profesor
-        </button>
-      </form>
+        <!-- Vista Inicial: Elegir Rol -->
+        <div id="role-selection" class="flex flex-col items-center justify-center p-10 bg-gray-900 bg-opacity-70 rounded-2xl shadow-2xl border border-gray-700 w-full max-w-md">
+            <h2 class="text-2xl font-bold mb-8 text-center text-blue-300">¿Cómo quieres entrar?</h2>
+            <button onclick="selectRole('teacher')" class="btn-neon text-xl font-bold py-4 px-8 rounded-full mb-6 w-full flex items-center justify-center gap-3">
+                <i class="fas fa-chalkboard-teacher"></i> Vista de Maestro (Pizarra)
+            </button>
+            <button onclick="selectRole('student')" class="btn-neon text-xl font-bold py-4 px-8 rounded-full w-full flex items-center justify-center gap-3" style="border-color: #ff00ff; color: #ff00ff; box-shadow: 0 0 10px #ff00ff, inset 0 0 10px #ff00ff;">
+                <i class="fas fa-user-astronaut"></i> Vista de Estudiante (Jugar)
+            </button>
+        </div>
+
+        <!-- Vista Estudiante: Unirse -->
+        <div id="student-join-view" class="hidden flex-col items-center justify-center p-8 bg-gray-900 bg-opacity-80 rounded-2xl shadow-2xl border border-gray-700 w-full max-w-md">
+            <h2 class="text-2xl font-bold mb-6 text-pink-400">¡Prepara tu nave!</h2>
+            <input type="text" id="player-name-input" placeholder="Tu Nombre o Apodo" class="w-full p-4 rounded-lg bg-gray-800 text-white border border-gray-600 focus:border-pink-500 focus:outline-none mb-6 text-xl text-center">
+            
+            <div class="mb-6 w-full">
+                <p class="text-center mb-2 text-gray-400">Elige tu nave:</p>
+                <div class="flex justify-center gap-4 text-3xl">
+                    <button class="ship-select bg-gray-800 p-3 rounded-lg border-2 border-transparent hover:border-pink-500 transition" onclick="selectShip('🚀')">🚀</button>
+                    <button class="ship-select bg-gray-800 p-3 rounded-lg border-2 border-transparent hover:border-pink-500 transition" onclick="selectShip('🛸')">🛸</button>
+                    <button class="ship-select bg-gray-800 p-3 rounded-lg border-2 border-transparent hover:border-pink-500 transition" onclick="selectShip('☄️')">☄️</button>
+                    <button class="ship-select bg-gray-800 p-3 rounded-lg border-2 border-transparent hover:border-pink-500 transition" onclick="selectShip('🛰️')">🛰️</button>
+                </div>
+            </div>
+
+            <button onclick="joinGame()" class="w-full bg-gradient-to-r from-pink-500 to-purple-600 hover:from-pink-600 hover:to-purple-700 text-white font-bold py-4 px-8 rounded-full text-xl shadow-lg transition transform hover:scale-105">
+                ¡Entrar a la Carrera!
+            </button>
+            <button onclick="goBack()" class="mt-4 text-gray-400 hover:text-white underline">Volver</button>
+        </div>
+
+        <!-- Vista Estudiante: Jugando -->
+        <div id="student-game-view" class="hidden flex-col items-center w-full max-w-lg">
+            
+            <div class="bg-gray-900 bg-opacity-80 p-6 rounded-2xl border border-gray-700 w-full mb-6 relative overflow-hidden shadow-2xl">
+                <div class="absolute top-0 right-0 p-2 bg-purple-600 text-xs font-bold rounded-bl-lg">Tu Puntuación: <span id="my-score">0</span></div>
+                
+                <h2 class="text-xl text-center text-gray-400 mb-2">Resuelve rápido:</h2>
+                
+                <div class="flex justify-center items-center my-8">
+                    <div id="problem-display" class="text-6xl font-bold title-font text-white bg-gray-800 p-8 rounded-xl shadow-[inset_0px_0px_20px_rgba(0,0,0,0.8)] border border-gray-600 w-full text-center">
+                        ? x ?
+                    </div>
+                </div>
+
+                <div id="options-container" class="grid grid-cols-2 gap-4 mt-6">
+                    <!-- Opciones generadas por JS -->
+                </div>
+                
+                <div id="feedback-msg" class="h-8 mt-4 text-center font-bold text-lg opacity-0 transition-opacity"></div>
+            </div>
+            
+            <div class="text-center text-sm text-gray-400 mt-4">
+                <p>Jugando como: <span id="playing-as" class="font-bold text-pink-400"></span></p>
+                <button onclick="quitGame()" class="mt-2 text-red-400 hover:text-red-300 underline">Salir del juego</button>
+            </div>
+        </div>
+
+        <!-- Vista Maestro: Pizarra Principal -->
+        <div id="teacher-board-view" class="hidden w-full flex-col lg:flex-row gap-8">
+            
+            <!-- Podium / Clasificación (Izquierda) -->
+            <div class="w-full lg:w-1/3 bg-gray-900 bg-opacity-80 rounded-2xl border border-gray-700 p-6 shadow-2xl flex flex-col">
+                <h2 class="text-2xl font-bold text-center mb-6 text-yellow-400 border-b border-gray-700 pb-2">
+                    <i class="fas fa-trophy mr-2"></i> Pizarra de Líderes
+                </h2>
+                
+                <div class="flex-grow flex flex-col justify-center gap-4" id="podium-container">
+                    <!-- Podium generado dinámicamente -->
+                    <div class="text-center text-gray-500 italic">Esperando jugadores...</div>
+                </div>
+
+                <div class="mt-6 pt-4 border-t border-gray-700 text-center">
+                    <button onclick="resetGame()" class="px-4 py-2 bg-red-600 hover:bg-red-700 text-white rounded font-bold transition text-sm">
+                        <i class="fas fa-redo mr-1"></i> Reiniciar Puntuaciones
+                    </button>
+                    <p class="text-xs text-gray-500 mt-2">Comparte el enlace con tus estudiantes para que se unan.</p>
+                </div>
+            </div>
+
+            <!-- Pista de Carreras (Derecha) -->
+            <div class="w-full lg:w-2/3 bg-gray-900 bg-opacity-80 rounded-2xl border border-gray-700 p-6 shadow-2xl overflow-hidden relative">
+                <h2 class="text-xl font-bold text-center mb-4 text-blue-300">Carrera en Vivo</h2>
+                <div class="absolute top-0 bottom-0 right-10 w-2 border-r-4 border-dashed border-yellow-500 z-0"></div> <!-- Línea de meta -->
+                <div class="absolute top-4 right-2 text-yellow-500 text-xs font-bold bg-black bg-opacity-50 px-2 rounded">META (1000 pts)</div>
+                
+                <div id="race-track-container" class="mt-8 relative z-10 space-y-4 max-h-[60vh] overflow-y-auto pr-2 custom-scrollbar">
+                    <!-- Pistas generadas dinámicamente -->
+                    <div class="text-center text-gray-500 italic mt-10">Ningún astronauta ha despegado aún...</div>
+                </div>
+            </div>
+        </div>
+
+    </main>
+
+    <!-- Modal Messages -->
+    <div id="message-modal" class="fixed inset-0 bg-black bg-opacity-70 flex items-center justify-center hidden z-50">
+        <div class="bg-gray-800 border border-gray-600 p-8 rounded-2xl shadow-2xl max-w-sm w-full text-center transform transition-all scale-95 opacity-0" id="message-modal-content">
+            <h3 class="text-2xl font-bold mb-4" id="modal-title">Mensaje</h3>
+            <p class="text-gray-300 mb-6" id="modal-text">Detalles aquí.</p>
+            <button onclick="closeModal()" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-6 rounded-full transition">Entendido</button>
+        </div>
     </div>
-  </div>
 
-  <!-- VISTA: JUEGO -->
-  <div id="view-play" class="hidden min-h-screen p-4 md:p-8">
-    <header class="max-w-6xl mx-auto flex flex-col md:flex-row justify-between items-center mb-8 gap-4">
-      <div class="flex items-center gap-3">
-        <i class="ph ph-rocket text-fuchsia-500 text-3xl"></i>
-        <h1 class="text-2xl md:text-3xl font-black italic tracking-wider text-transparent bg-clip-text bg-gradient-to-r from-fuchsia-500 to-cyan-500">
-          NEON RUSH
-        </h1>
-      </div>
-      <div class="flex items-center gap-4 bg-slate-900 border border-slate-700 px-6 py-2 rounded-full shadow-lg">
-        <span class="text-slate-400 font-medium">Jugador: <span id="display-player-name" class="text-white"></span></span>
-        <div class="w-px h-6 bg-slate-700"></div>
-        <span class="text-slate-400 font-medium flex items-center gap-2">
-          Puntos: <span id="display-score" class="text-cyan-400 font-mono text-xl">0</span>
-        </span>
-      </div>
-    </header>
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+        import { getAuth, signInAnonymously, signInWithCustomToken, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+        import { getFirestore, doc, setDoc, onSnapshot, collection, query, addDoc, updateDoc, deleteDoc, getDocs } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
 
-    <main class="max-w-6xl mx-auto grid grid-cols-1 lg:grid-cols-3 gap-8">
-      <!-- PANEL IZQUIERDO: JUEGO -->
-      <div class="lg:col-span-2">
-        <div id="game-panel" class="bg-slate-900 border border-slate-800 rounded-3xl p-6 md:p-10 shadow-2xl relative overflow-hidden h-full flex flex-col justify-center min-h-[400px]">
-          
-          <div id="feedback-overlay" class="absolute inset-0 z-0 pointer-events-none"></div>
-
-          <div class="relative z-10 text-center mb-10">
-            <p class="text-slate-400 text-sm tracking-widest uppercase mb-4 font-bold flex justify-center items-center gap-2">
-              <i class="ph ph-lightning text-cyan-400"></i> Calcula rápido
-            </p>
-            <div id="question-display" class="text-7xl md:text-9xl font-black font-mono tracking-tighter drop-shadow-[0_0_15px_rgba(34,211,238,0.3)]">
-              <!-- NÚMEROS SE INSERTAN AQUÍ -->
-            </div>
-          </div>
-
-          <div id="options-container" class="grid grid-cols-2 gap-4 md:gap-6 relative z-10">
-            <!-- BOTONES SE INSERTAN AQUÍ -->
-          </div>
-          
-          <div class="mt-8 text-center text-slate-500 text-sm">
-            +10 puntos correcta | -5 puntos incorrecta
-          </div>
-        </div>
-      </div>
-
-      <!-- PANEL DERECHO: LEADERBOARD LATERAL -->
-      <div class="lg:col-span-1">
-        <div class="bg-slate-900/80 border border-slate-800 rounded-3xl p-6 shadow-2xl h-full flex flex-col max-h-[600px]">
-          <div class="flex items-center gap-3 mb-6">
-            <i class="ph-fill ph-trophy text-yellow-400 text-2xl"></i>
-            <h2 class="text-xl font-bold tracking-wide uppercase">Clasificación</h2>
-          </div>
-          <div id="sidebar-leaderboard" class="flex-1 overflow-y-auto pr-2 custom-scrollbar">
-            <!-- LISTA DE JUGADORES SE INSERTA AQUÍ -->
-          </div>
-        </div>
-      </div>
-    </main>
-  </div>
-
-  <!-- VISTA: PIZARRA (PROFESOR) -->
-  <div id="view-whiteboard" class="hidden min-h-screen p-4 md:p-8 flex flex-col">
-    <header class="text-center mb-8 relative">
-      <button 
-        id="btn-back-to-login"
-        class="absolute left-0 top-1/2 -translate-y-1/2 text-slate-400 hover:text-white flex items-center gap-2 bg-slate-900 px-4 py-2 rounded-lg border border-slate-700 transition-colors"
-      >
-        <i class="ph ph-arrow-left"></i> Volver
-      </button>
-      <h1 class="text-4xl md:text-6xl font-black italic tracking-wider text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 via-fuchsia-500 to-cyan-400 animate-pulse drop-shadow-[0_0_15px_rgba(34,211,238,0.5)]">
-        ARENA NEON RUSH
-      </h1>
-      <p class="text-lg md:text-xl text-slate-400 mt-2 tracking-widest uppercase font-bold">Clasificación en Vivo</p>
-    </header>
-
-    <main class="flex-1 max-w-7xl mx-auto w-full flex flex-col items-center">
-      <!-- Podium Top 3 -->
-      <div id="podium-container" class="flex justify-center items-end gap-2 md:gap-8 mb-12 h-64 w-full mt-10">
-        <!-- PODIO SE INSERTA AQUÍ -->
-      </div>
-
-      <!-- Rest of Leaderboard -->
-      <div id="rest-leaderboard" class="w-full max-w-5xl grid grid-cols-1 md:grid-cols-2 gap-4 px-4">
-        <!-- RESTO DE JUGADORES SE INSERTA AQUÍ -->
-      </div>
-      
-      <div id="empty-leaderboard-msg" class="hidden text-center text-slate-500 mt-20 text-2xl flex flex-col items-center gap-4 bg-slate-900/50 p-10 rounded-3xl border border-slate-800">
-        <i class="ph ph-monitor-play text-6xl opacity-50 mb-4"></i>
-        <p>Esperando a que los estudiantes se unan a la arena...</p>
-        <p class="text-sm text-slate-600">Los puntajes aparecerán aquí en vivo.</p>
-      </div>
-    </main>
-  </div>
-
-  <script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
-    import { getAuth, signInAnonymously, signInWithCustomToken, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
-    import { getFirestore, collection, doc, setDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
-
-    // --- VARIABLES GLOBALES ---
-    const firebaseConfig = typeof __firebase_config !== 'undefined' ? JSON.parse(__firebase_config) : {};
-    const appId = typeof __app_id !== 'undefined' ? __app_id : 'math-game-app';
-    
-    const app = initializeApp(firebaseConfig);
-    const auth = getAuth(app);
-    const db = getFirestore(app);
-
-    // Estado de la aplicación
-    let state = {
-      user: null,
-      playerName: '',
-      score: 0,
-      leaderboard: [],
-      num1: 0,
-      num2: 0,
-      correctAnswer: 0,
-      isAnswering: false
-    };
-
-    // Referencias a elementos del DOM
-    const views = {
-      login: document.getElementById('view-login'),
-      play: document.getElementById('view-play'),
-      whiteboard: document.getElementById('view-whiteboard')
-    };
-
-    // --- FUNCIONES DE UTILIDAD (UI) ---
-    function switchView(viewName) {
-      Object.values(views).forEach(v => v.classList.add('hidden'));
-      views[viewName].classList.remove('hidden');
-    }
-
-    // --- AUTENTICACIÓN ---
-    async function initAuth() {
-      try {
-        if (typeof __initial_auth_token !== 'undefined' && __initial_auth_token) {
-          await signInWithCustomToken(auth, __initial_auth_token);
-        } else {
-          await signInAnonymously(auth);
-        }
-      } catch (error) {
-        console.error("Error de autenticación:", error);
-      }
-    }
-
-    onAuthStateChanged(auth, (currentUser) => {
-      state.user = currentUser;
-      const btnJoin = document.getElementById('btn-join');
-      const btnJoinText = document.getElementById('btn-join-text');
-      
-      if (currentUser) {
-        btnJoin.disabled = false;
-        btnJoinText.innerHTML = 'Entrar a la Arena <i class="ph-bold ph-lightning"></i>';
-      }
-    });
-
-    initAuth();
-
-    // --- MULTIPLAYER LISTENER ---
-    function setupLeaderboardListener() {
-      if (!state.user) return;
-      
-      const playersRef = collection(db, 'artifacts', appId, 'public', 'data', 'neon_math_players');
-      
-      onSnapshot(playersRef, (snapshot) => {
-        const playersData = snapshot.docs.map(doc => doc.data());
+        // Firebase Config Setup
+        const appId = typeof __app_id !== 'undefined' ? __app_id : 'multiplication-race-app';
+        let firebaseConfig;
         
-        // Filtrar inactivos (1 hora) y ordenar localmente
-        const activePlayers = playersData.filter(p => Date.now() - p.lastActive < 1000 * 60 * 60);
-        activePlayers.sort((a, b) => b.score - a.score);
-        
-        state.leaderboard = activePlayers;
-        
-        // Sincronizar score local
-        const me = activePlayers.find(p => p.uid === state.user.uid);
-        if (me && me.score !== state.score) {
-          state.score = me.score;
-          document.getElementById('display-score').innerText = state.score;
-        }
-
-        renderLeaderboards();
-      }, (error) => {
-        console.error("Error obteniendo leaderboard:", error);
-      });
-    }
-
-    function renderLeaderboards() {
-      // 1. Render Sidebar (Modo Juego)
-      const sidebarContainer = document.getElementById('sidebar-leaderboard');
-      sidebarContainer.innerHTML = '';
-      
-      if (state.leaderboard.length === 0) {
-        sidebarContainer.innerHTML = `
-          <div class="text-center text-slate-500 py-10 flex flex-col items-center">
-            <i class="ph ph-warning-circle text-4xl mb-2 opacity-50"></i>
-            <p>Esperando jugadores...</p>
-          </div>`;
-      } else {
-        state.leaderboard.forEach((player, index) => {
-          const isMe = state.user && player.uid === state.user.uid;
-          let bgClass = "bg-slate-800/40 border border-slate-700/50";
-          let iconHtml = `<span class="w-8 text-center text-slate-500 font-bold">${index + 1}</span>`;
-          
-          if (index === 0) { bgClass = "bg-gradient-to-r from-yellow-500/20 to-transparent border border-yellow-500/50"; iconHtml = `<i class="ph-fill ph-trophy text-yellow-400 text-2xl mr-2 animate-pulse"></i>`; }
-          else if (index === 1) { bgClass = "bg-gradient-to-r from-slate-300/20 to-transparent border border-slate-300/50"; iconHtml = `<i class="ph-fill ph-medal text-gray-300 text-2xl mr-2"></i>`; }
-          else if (index === 2) { bgClass = "bg-gradient-to-r from-amber-600/20 to-transparent border border-amber-600/50"; iconHtml = `<i class="ph-fill ph-medal text-amber-600 text-2xl mr-2"></i>`; }
-          
-          if (isMe) bgClass = bgClass.replace('border-slate-700/50', '').replace('border-yellow-500/50','').replace('border-slate-300/50','').replace('border-amber-600/50','') + " border-2 border-indigo-500";
-
-          sidebarContainer.innerHTML += `
-            <div class="flex items-center justify-between p-3 mb-2 rounded-lg transition-all ${bgClass}">
-              <div class="flex items-center gap-3 overflow-hidden">
-                ${iconHtml}
-                <span class="font-semibold truncate max-w-[120px] ${isMe ? 'text-white' : 'text-slate-300'}">
-                  ${player.name}
-                  ${isMe ? '<span class="ml-2 text-xs bg-indigo-500/30 text-indigo-300 px-2 py-0.5 rounded-full">Tú</span>' : ''}
-                </span>
-              </div>
-              <span class="font-mono font-bold text-lg text-cyan-400">${player.score}</span>
-            </div>`;
-        });
-      }
-
-      // 2. Render Whiteboard
-      const top3 = state.leaderboard.slice(0, 3);
-      const rest = state.leaderboard.slice(3, 13);
-      const podiumContainer = document.getElementById('podium-container');
-      const restContainer = document.getElementById('rest-leaderboard');
-      const emptyMsg = document.getElementById('empty-leaderboard-msg');
-
-      if (state.leaderboard.length === 0) {
-        podiumContainer.innerHTML = '';
-        restContainer.innerHTML = '';
-        emptyMsg.classList.remove('hidden');
-        return;
-      }
-      
-      emptyMsg.classList.add('hidden');
-      
-      // Podio
-      let podiumHtml = '';
-      // 2do lugar
-      if (top3[1]) {
-        podiumHtml += `
-          <div class="flex flex-col items-center z-10 w-1/3 max-w-[200px]">
-            <div class="text-xl md:text-2xl font-bold mb-1 text-slate-300 truncate w-full text-center">${top3[1].name}</div>
-            <div class="text-2xl md:text-3xl font-mono text-cyan-400 mb-2 font-bold">${top3[1].score} pt</div>
-            <div class="w-full h-40 bg-gradient-to-t from-slate-400/30 to-slate-900 border-t-4 border-slate-300 rounded-t-xl flex justify-center pt-4 shadow-[0_0_30px_rgba(203,213,225,0.2)]">
-              <i class="ph-fill ph-medal text-slate-300 text-5xl"></i>
-            </div>
-          </div>`;
-      }
-      // 1er lugar
-      if (top3[0]) {
-        podiumHtml += `
-          <div class="flex flex-col items-center z-20 w-1/3 max-w-[240px]">
-            <i class="ph-fill ph-crown text-yellow-400 text-5xl mb-2 animate-bounce"></i>
-            <div class="text-2xl md:text-4xl font-black mb-1 text-yellow-400 truncate w-full text-center drop-shadow-[0_0_10px_rgba(250,204,21,0.5)]">${top3[0].name}</div>
-            <div class="text-3xl md:text-5xl font-mono text-cyan-400 mb-2 font-black">${top3[0].score} pt</div>
-            <div class="w-full h-52 md:h-60 bg-gradient-to-t from-yellow-500/40 to-slate-900 border-t-4 border-yellow-400 rounded-t-xl flex justify-center pt-4 shadow-[0_0_50px_rgba(250,204,21,0.4)]">
-              <i class="ph-fill ph-trophy text-yellow-400 text-7xl drop-shadow-[0_0_15px_rgba(250,204,21,0.8)]"></i>
-            </div>
-          </div>`;
-      }
-      // 3er lugar
-      if (top3[2]) {
-        podiumHtml += `
-          <div class="flex flex-col items-center z-10 w-1/3 max-w-[200px]">
-            <div class="text-xl md:text-2xl font-bold mb-1 text-amber-600 truncate w-full text-center">${top3[2].name}</div>
-            <div class="text-2xl md:text-3xl font-mono text-cyan-400 mb-2 font-bold">${top3[2].score} pt</div>
-            <div class="w-full h-32 md:h-36 bg-gradient-to-t from-amber-600/30 to-slate-900 border-t-4 border-amber-600 rounded-t-xl flex justify-center pt-4 shadow-[0_0_30px_rgba(217,119,6,0.2)]">
-              <i class="ph-fill ph-medal text-amber-600 text-5xl"></i>
-            </div>
-          </div>`;
-      }
-      podiumContainer.innerHTML = podiumHtml;
-
-      // Resto
-      restContainer.innerHTML = rest.map((player, index) => `
-        <div class="bg-slate-800/50 border border-slate-700 p-4 rounded-xl flex justify-between items-center shadow-lg">
-          <div class="flex items-center gap-4">
-            <span class="text-2xl font-black text-slate-600 w-8">${index + 4}</span>
-            <span class="text-xl md:text-2xl font-semibold text-slate-200 truncate max-w-[200px]">${player.name}</span>
-          </div>
-          <span class="text-xl md:text-2xl font-mono text-cyan-400 font-bold">${player.score} pt</span>
-        </div>
-      `).join('');
-    }
-
-    // --- LÓGICA DEL JUEGO ---
-    function generateQuestion() {
-      state.isAnswering = false;
-      const n1 = Math.floor(Math.random() * 8) + 2;
-      const n2 = Math.floor(Math.random() * 8) + 2;
-      state.correctAnswer = n1 * n2;
-      state.num1 = n1;
-      state.num2 = n2;
-
-      // Actualizar UI
-      document.getElementById('question-display').innerHTML = `${n1} <span class="text-fuchsia-500 mx-2">×</span> ${n2}`;
-
-      // Generar opciones
-      let wrongOptions = new Set();
-      while (wrongOptions.size < 3) {
-        const offset = Math.floor(Math.random() * 5) + 1;
-        const addOrSub = Math.random() > 0.5 ? 1 : -1;
-        let wrongAns = state.correctAnswer + (offset * n1 * addOrSub);
-        
-        if (wrongAns <= 0 || wrongAns === state.correctAnswer) {
-           wrongAns = state.correctAnswer + (Math.floor(Math.random() * 10) - 5);
-        }
-        if (wrongAns > 0 && wrongAns !== state.correctAnswer) {
-          wrongOptions.add(wrongAns);
-        }
-      }
-
-      const allOptions = [state.correctAnswer, ...Array.from(wrongOptions)];
-      for (let i = allOptions.length - 1; i > 0; i--) {
-        const j = Math.floor(Math.random() * (i + 1));
-        [allOptions[i], allOptions[j]] = [allOptions[j], allOptions[i]];
-      }
-
-      // Renderizar botones
-      const optionsContainer = document.getElementById('options-container');
-      optionsContainer.innerHTML = allOptions.map((opt, index) => `
-        <button
-          onclick="window.handleAnswer(${opt})"
-          class="option-btn bg-slate-800 hover:bg-slate-700 border-2 border-slate-700 hover:border-cyan-400 text-3xl md:text-4xl font-mono font-bold py-6 md:py-8 rounded-2xl transition-all shadow-lg active:scale-95 disabled:opacity-80 disabled:cursor-not-allowed"
-        >
-          ${opt}
-        </button>
-      `).join('');
-      
-      // Limpiar overlay
-      document.getElementById('feedback-overlay').className = "absolute inset-0 z-0 pointer-events-none";
-    }
-
-    // Exponer handleAnswer globalmente para los botones inline
-    window.handleAnswer = async function(selectedAnswer) {
-      if (state.isAnswering) return;
-      state.isAnswering = true;
-
-      // Deshabilitar botones
-      document.querySelectorAll('.option-btn').forEach(btn => btn.disabled = true);
-
-      const isCorrect = selectedAnswer === state.correctAnswer;
-      const pointChange = isCorrect ? 10 : -5;
-      const newScore = Math.max(0, state.score + pointChange);
-      
-      state.score = newScore;
-      document.getElementById('display-score').innerText = newScore;
-
-      // Feedback visual
-      const overlay = document.getElementById('feedback-overlay');
-      overlay.classList.add(isCorrect ? 'animate-feedback-correct' : 'animate-feedback-wrong');
-
-      // Actualizar Firebase
-      if (state.user && state.playerName) {
         try {
-          const playerDocRef = doc(db, 'artifacts', appId, 'public', 'data', 'neon_math_players', state.user.uid);
-          await setDoc(playerDocRef, {
-            uid: state.user.uid,
-            name: state.playerName,
-            score: newScore,
-            lastActive: Date.now()
-          }, { merge: true });
-        } catch (error) {
-          console.error("Error guardando puntaje:", error);
+            firebaseConfig = typeof __firebase_config !== 'undefined' ? JSON.parse(__firebase_config) : {
+                // Dummy config for fallback if needed, though usually provided by env
+                apiKey: "dummy", authDomain: "dummy", projectId: "dummy", storageBucket: "dummy", messagingSenderId: "dummy", appId: "dummy"
+            };
+        } catch (e) {
+            console.error("Error parsing firebase config", e);
+            showModal("Error", "No se pudo configurar la base de datos.");
         }
-      }
 
-      // Siguiente pregunta
-      setTimeout(() => {
-        generateQuestion();
-      }, 600);
-    };
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+        const auth = getAuth(app);
 
-    // --- EVENT LISTENERS NAVEGACIÓN ---
-    document.getElementById('login-form').addEventListener('submit', async (e) => {
-      e.preventDefault();
-      const nameInput = document.getElementById('player-name-input').value.trim();
-      if (!nameInput || !state.user) return;
-      
-      state.playerName = nameInput;
-      document.getElementById('display-player-name').innerText = state.playerName;
-      
-      try {
-        const playerDocRef = doc(db, 'artifacts', appId, 'public', 'data', 'neon_math_players', state.user.uid);
-        await setDoc(playerDocRef, {
-          uid: state.user.uid,
-          name: state.playerName,
-          score: state.score,
-          lastActive: Date.now()
+        // State Variables
+        let currentUser = null;
+        let userRole = null; // 'teacher' or 'student'
+        let currentProblem = {};
+        let myScore = 0;
+        let myShipIcon = '🚀';
+        let myName = '';
+        let playersUnsubscribe = null;
+        const WINNING_SCORE = 1000;
+
+        // Initialize Auth
+        async function initAuth() {
+            try {
+                if (typeof __initial_auth_token !== 'undefined' && __initial_auth_token) {
+                    await signInWithCustomToken(auth, __initial_auth_token);
+                } else {
+                    await signInAnonymously(auth);
+                }
+            } catch (error) {
+                console.error("Auth Error:", error);
+                showModal("Error de Conexión", "No pudimos conectarte a los servidores del juego.");
+            }
+        }
+
+        onAuthStateChanged(auth, (user) => {
+            if (user) {
+                currentUser = user;
+                console.log("Authenticated as:", user.uid);
+            } else {
+                currentUser = null;
+            }
         });
-        
-        setupLeaderboardListener();
-        generateQuestion();
-        switchView('play');
-      } catch (error) {
-        console.error("Error al unirse:", error);
-      }
-    });
 
-    document.getElementById('btn-teacher-mode').addEventListener('click', () => {
-      setupLeaderboardListener();
-      switchView('whiteboard');
-    });
+        // Initialize App
+        initAuth();
 
-    document.getElementById('btn-back-to-login').addEventListener('click', () => {
-      switchView('login');
-    });
+        // UI Functions
+        window.selectRole = (role) => {
+            userRole = role;
+            document.getElementById('role-selection').classList.add('hidden');
+            
+            if (role === 'student') {
+                document.getElementById('student-join-view').classList.remove('hidden');
+                document.getElementById('student-join-view').classList.add('flex');
+            } else if (role === 'teacher') {
+                document.getElementById('teacher-board-view').classList.remove('hidden');
+                document.getElementById('teacher-board-view').classList.add('flex');
+                startListeningToPlayers();
+            }
+        };
 
-  </script>
+        window.goBack = () => {
+            document.getElementById('student-join-view').classList.add('hidden');
+            document.getElementById('student-join-view').classList.remove('flex');
+            document.getElementById('role-selection').classList.remove('hidden');
+        };
+
+        window.selectShip = (icon) => {
+            myShipIcon = icon;
+            document.querySelectorAll('.ship-select').forEach(el => {
+                el.classList.remove('border-pink-500', 'bg-gray-700');
+                el.classList.add('border-transparent');
+                if(el.innerText === icon) {
+                    el.classList.add('border-pink-500', 'bg-gray-700');
+                }
+            });
+        };
+
+        // Modal Custom
+        window.showModal = (title, text) => {
+            const modal = document.getElementById('message-modal');
+            const content = document.getElementById('message-modal-content');
+            document.getElementById('modal-title').innerText = title;
+            document.getElementById('modal-text').innerText = text;
+            modal.classList.remove('hidden');
+            setTimeout(() => {
+                content.classList.remove('scale-95', 'opacity-0');
+                content.classList.add('scale-100', 'opacity-100');
+            }, 10);
+        };
+
+        window.closeModal = () => {
+            const modal = document.getElementById('message-modal');
+            const content = document.getElementById('message-modal-content');
+            content.classList.remove('scale-100', 'opacity-100');
+            content.classList.add('scale-95', 'opacity-0');
+            setTimeout(() => {
+                modal.classList.add('hidden');
+            }, 300);
+        };
+
+        // Student Game Logic
+        window.joinGame = async () => {
+            const nameInput = document.getElementById('player-name-input').value.trim();
+            if (!nameInput) {
+                showModal("Falta tu nombre", "Por favor ingresa un nombre para jugar.");
+                return;
+            }
+            if (!currentUser) {
+                showModal("Espera", "Conectando al servidor...");
+                return;
+            }
+
+            myName = nameInput;
+            myScore = 0;
+
+            // Save player to Firestore (Public Data so teacher can see)
+            const playerRef = doc(db, 'artifacts', appId, 'public', 'data', 'players', currentUser.uid);
+            try {
+                await setDoc(playerRef, {
+                    name: myName,
+                    score: myScore,
+                    icon: myShipIcon,
+                    lastUpdate: Date.now()
+                });
+
+                // Update UI
+                document.getElementById('student-join-view').classList.add('hidden');
+                document.getElementById('student-join-view').classList.remove('flex');
+                document.getElementById('student-game-view').classList.remove('hidden');
+                document.getElementById('student-game-view').classList.add('flex');
+                
+                document.getElementById('playing-as').innerText = `${myShipIcon} ${myName}`;
+                document.getElementById('my-score').innerText = myScore;
+
+                generateProblem();
+                
+            } catch (error) {
+                console.error("Error joining game:", error);
+                showModal("Error", "No pudimos registrarte en la carrera.");
+            }
+        };
+
+        window.quitGame = async () => {
+            if (currentUser) {
+                const playerRef = doc(db, 'artifacts', appId, 'public', 'data', 'players', currentUser.uid);
+                try {
+                    await deleteDoc(playerRef);
+                } catch(e) { console.error(e); }
+            }
+            
+            document.getElementById('student-game-view').classList.add('hidden');
+            document.getElementById('student-game-view').classList.remove('flex');
+            document.getElementById('role-selection').classList.remove('hidden');
+            myScore = 0;
+        };
+
+        function generateProblem() {
+            // 1-digit multiplication (1 to 9)
+            const num1 = Math.floor(Math.random() * 9) + 1;
+            const num2 = Math.floor(Math.random() * 9) + 1;
+            const correctAnswer = num1 * num2;
+
+            currentProblem = { num1, num2, answer: correctAnswer };
+
+            document.getElementById('problem-display').innerText = `${num1} x ${num2}`;
+
+            // Generate options
+            let options = new Set([correctAnswer]);
+            while(options.size < 4) {
+                // Generate plausible distractors
+                const variation = Math.floor(Math.random() * 3);
+                let wrongAnswer;
+                if (variation === 0) {
+                    wrongAnswer = (num1 + (Math.random() > 0.5 ? 1 : -1)) * num2;
+                } else if (variation === 1) {
+                    wrongAnswer = num1 * (num2 + (Math.random() > 0.5 ? 1 : -1));
+                } else {
+                    wrongAnswer = correctAnswer + (Math.floor(Math.random() * 10) - 5);
+                }
+                
+                if(wrongAnswer > 0 && wrongAnswer !== correctAnswer) {
+                    options.add(wrongAnswer);
+                }
+            }
+
+            // Shuffle options
+            const shuffledOptions = Array.from(options).sort(() => Math.random() - 0.5);
+
+            const optionsContainer = document.getElementById('options-container');
+            optionsContainer.innerHTML = '';
+            
+            shuffledOptions.forEach(opt => {
+                const btn = document.createElement('button');
+                btn.className = 'bg-gray-800 border-2 border-gray-600 hover:border-blue-400 hover:bg-gray-700 text-white font-bold py-6 px-4 rounded-xl text-3xl transition shadow-md';
+                btn.innerText = opt;
+                btn.onclick = () => checkAnswer(opt, btn);
+                optionsContainer.appendChild(btn);
+            });
+        }
+
+        async function checkAnswer(selected, btnElement) {
+            const feedback = document.getElementById('feedback-msg');
+            const problemDisplay = document.getElementById('problem-display');
+
+            // Disable all buttons briefly
+            const buttons = document.querySelectorAll('#options-container button');
+            buttons.forEach(b => b.disabled = true);
+
+            if (selected === currentProblem.answer) {
+                // Correct
+                btnElement.classList.replace('border-gray-600', 'border-green-500');
+                btnElement.classList.replace('bg-gray-800', 'bg-green-900');
+                problemDisplay.classList.add('text-green-400');
+                
+                feedback.innerText = '¡Correcto! +10';
+                feedback.className = 'h-8 mt-4 text-center font-bold text-lg text-green-400 opacity-100 transition-opacity';
+                
+                myScore += 10;
+                document.getElementById('my-score').innerText = myScore;
+
+                // Update Firestore
+                if (currentUser) {
+                    const playerRef = doc(db, 'artifacts', appId, 'public', 'data', 'players', currentUser.uid);
+                    try {
+                        await updateDoc(playerRef, { 
+                            score: myScore,
+                            lastUpdate: Date.now()
+                        });
+                    } catch (e) { console.error("Error updating score", e); }
+                }
+
+                setTimeout(() => {
+                    problemDisplay.classList.remove('text-green-400');
+                    feedback.classList.replace('opacity-100', 'opacity-0');
+                    generateProblem();
+                }, 800);
+
+            } else {
+                // Incorrect
+                btnElement.classList.replace('border-gray-600', 'border-red-500');
+                btnElement.classList.replace('bg-gray-800', 'bg-red-900');
+                btnElement.classList.add('vibrate');
+                problemDisplay.classList.add('text-red-400');
+
+                feedback.innerText = '¡Ups! Intenta de nuevo.';
+                feedback.className = 'h-8 mt-4 text-center font-bold text-lg text-red-400 opacity-100 transition-opacity';
+
+                setTimeout(() => {
+                    btnElement.classList.replace('border-red-500', 'border-gray-600');
+                    btnElement.classList.replace('bg-red-900', 'bg-gray-800');
+                    btnElement.classList.remove('vibrate');
+                    problemDisplay.classList.remove('text-red-400');
+                    feedback.classList.replace('opacity-100', 'opacity-0');
+                    buttons.forEach(b => b.disabled = false);
+                }, 800);
+            }
+        }
+
+        // Teacher / Board Logic
+        function startListeningToPlayers() {
+            if (!currentUser) return;
+
+            const playersCol = collection(db, 'artifacts', appId, 'public', 'data', 'players');
+            
+            playersUnsubscribe = onSnapshot(playersCol, (snapshot) => {
+                let players = [];
+                snapshot.forEach(doc => {
+                    players.push({ id: doc.id, ...doc.data() });
+                });
+
+                // Sort by score descending
+                players.sort((a, b) => b.score - a.score);
+
+                updateTeacherBoard(players);
+
+            }, (error) => {
+                console.error("Error listening to players:", error);
+            });
+        }
+
+        function updateTeacherBoard(players) {
+            const trackContainer = document.getElementById('race-track-container');
+            const podiumContainer = document.getElementById('podium-container');
+
+            if (players.length === 0) {
+                trackContainer.innerHTML = '<div class="text-center text-gray-500 italic mt-10">Ningún astronauta ha despegado aún...</div>';
+                podiumContainer.innerHTML = '<div class="text-center text-gray-500 italic">Esperando jugadores...</div>';
+                return;
+            }
+
+            // Update Tracks
+            trackContainer.innerHTML = '';
+            players.forEach(player => {
+                // Calculate position percentage (max WINNING_SCORE)
+                let progressPercent = (player.score / WINNING_SCORE) * 100;
+                if (progressPercent > 100) progressPercent = 100;
+                // Adjust so ship stops before edge
+                const visualPercent = progressPercent * 0.9; 
+
+                const trackHTML = `
+                    <div class="ship-track">
+                        <div class="absolute left-0 bottom-1 text-xs text-gray-400 font-bold w-24 truncate" title="${player.name}">${player.name}</div>
+                        <div class="ship floating" style="left: ${visualPercent}%;">
+                            ${player.icon}
+                            <span class="absolute -top-4 left-1/2 transform -translate-x-1/2 text-[10px] bg-black bg-opacity-70 px-1 rounded text-white">${player.score}</span>
+                        </div>
+                    </div>
+                `;
+                trackContainer.insertAdjacentHTML('beforeend', trackHTML);
+            });
+
+            // Update Podium
+            podiumContainer.innerHTML = '';
+            
+            const topPlayers = players.slice(0, 3);
+            const medals = [
+                { class: 'medal-gold text-4xl', icon: 'fa-medal', name: 'Oro' },
+                { class: 'medal-silver text-3xl', icon: 'fa-medal', name: 'Plata' },
+                { class: 'medal-bronze text-2xl', icon: 'fa-medal', name: 'Bronce' }
+            ];
+
+            if(topPlayers.length > 0) {
+                let podiumHTML = '<div class="flex flex-col gap-3">';
+                topPlayers.forEach((player, index) => {
+                    const medal = medals[index];
+                    podiumHTML += `
+                        <div class="flex items-center justify-between bg-gray-800 p-3 rounded-xl border border-gray-700 shadow-md transform transition hover:scale-105">
+                            <div class="flex items-center gap-3">
+                                <i class="fas ${medal.icon} ${medal.class}"></i>
+                                <span class="text-2xl">${player.icon}</span>
+                                <span class="font-bold text-lg text-white truncate max-w-[120px]" title="${player.name}">${player.name}</span>
+                            </div>
+                            <div class="font-mono text-xl text-blue-300 bg-gray-900 px-3 py-1 rounded-lg">${player.score} pts</div>
+                        </div>
+                    `;
+                });
+                podiumHTML += '</div>';
+                
+                // Add runner-ups if more than 3 players
+                if(players.length > 3) {
+                    podiumHTML += '<div class="mt-4 pt-4 border-t border-gray-700 max-h-32 overflow-y-auto custom-scrollbar">';
+                    for(let i=3; i<players.length; i++) {
+                         podiumHTML += `
+                            <div class="flex justify-between text-sm text-gray-400 mb-2 px-2">
+                                <span>${i+1}. ${players[i].icon} ${players[i].name}</span>
+                                <span>${players[i].score}</span>
+                            </div>
+                         `;
+                    }
+                    podiumHTML += '</div>';
+                }
+
+                podiumContainer.innerHTML = podiumHTML;
+            }
+        }
+
+        window.resetGame = async () => {
+            if (!currentUser) return;
+            
+            // Note: In a real secure app, only a teacher auth token should be able to do this.
+            // For this immersive, we'll allow the client acting as teacher to reset scores.
+            if(confirm("¿Estás seguro de que quieres reiniciar las puntuaciones de todos los jugadores a cero?")) {
+                try {
+                    const playersCol = collection(db, 'artifacts', appId, 'public', 'data', 'players');
+                    const snapshot = await getDocs(playersCol);
+                    
+                    snapshot.forEach(async (docSnap) => {
+                        await updateDoc(docSnap.ref, { score: 0, lastUpdate: Date.now() });
+                    });
+                    
+                    showModal("Éxito", "Las puntuaciones han sido reiniciadas. ¡Nueva carrera!");
+                } catch (e) {
+                    console.error("Error resetting", e);
+                    showModal("Error", "No se pudieron reiniciar las puntuaciones.");
+                }
+            }
+        };
+
+        // Initialize first ship as selected visually
+        selectShip('🚀');
+
+    </script>
+    
+    <style>
+        /* Custom scrollbar for inner areas */
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 6px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: rgba(0,0,0,0.2); 
+            border-radius: 4px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: rgba(255,255,255,0.2); 
+            border-radius: 4px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+            background: rgba(255,255,255,0.4); 
+        }
+    </style>
 </body>
 </html>
