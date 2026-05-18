@@ -2,10 +2,14 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Carrera Espacial de Multiplicación</title>
+    
+    <!-- Carga de Tailwind CSS para estilos responsivos -->
     <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Iconos de FontAwesome -->
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Space+Grotesk:wght@400;700&display=swap');
 
@@ -15,6 +19,7 @@
             color: white;
             min-height: 100vh;
             overflow-x: hidden;
+            touch-action: manipulation; /* Optimización para pantallas táctiles */
         }
 
         .title-font {
@@ -22,6 +27,7 @@
             text-shadow: 2px 2px 0px #000;
         }
 
+        /* Estilos de botones Neón */
         .btn-neon {
             background-color: transparent;
             border: 2px solid #00ffcc;
@@ -30,12 +36,14 @@
             transition: all 0.3s ease;
         }
 
-        .btn-neon:hover {
+        .btn-neon:hover, .btn-neon:focus {
             background-color: #00ffcc;
             color: #000;
             box-shadow: 0 0 20px #00ffcc, inset 0 0 20px #00ffcc;
+            outline: none;
         }
 
+        /* Animación del fondo espacial */
         .star-bg {
             position: fixed;
             top: 0;
@@ -52,6 +60,7 @@
             to { background-position: -1000px 1000px; }
         }
 
+        /* Elementos de la pista del maestro */
         .ship-track {
             border-bottom: 2px dashed rgba(255,255,255,0.2);
             position: relative;
@@ -64,182 +73,191 @@
             left: 0;
             top: 50%;
             transform: translateY(-50%);
-            transition: left 0.5s ease-out;
-            font-size: 2rem;
-            filter: drop-shadow(0 0 5px rgba(255,255,255,0.8));
+            transition: left 0.8s cubic-bezier(0.34, 1.56, 0.64, 1);
+            font-size: 2.5rem;
+            filter: drop-shadow(0 0 8px rgba(255,255,255,0.8));
+            z-index: 10;
         }
 
-        .medal-gold { color: #FFD700; text-shadow: 0 0 10px #FFD700; }
-        .medal-silver { color: #C0C0C0; text-shadow: 0 0 10px #C0C0C0; }
-        .medal-bronze { color: #CD7F32; text-shadow: 0 0 10px #CD7F32; }
+        /* Colores de medallas */
+        .medal-gold { color: #FFD700; text-shadow: 0 0 15px rgba(255, 215, 0, 0.6); }
+        .medal-silver { color: #C0C0C0; text-shadow: 0 0 15px rgba(192, 192, 192, 0.6); }
+        .medal-bronze { color: #CD7F32; text-shadow: 0 0 15px rgba(205, 127, 50, 0.6); }
 
-        .vibrate {
-            animation: vibrate-anim 0.3s linear infinite both;
-        }
-
+        /* Animaciones de Feedback */
+        .vibrate { animation: vibrate-anim 0.3s linear infinite both; }
         @keyframes vibrate-anim {
             0% { transform: translate(0) }
-            20% { transform: translate(-2px, 2px) }
-            40% { transform: translate(-2px, -2px) }
-            60% { transform: translate(2px, 2px) }
-            80% { transform: translate(2px, -2px) }
+            20% { transform: translate(-3px, 3px) }
+            40% { transform: translate(-3px, -3px) }
+            60% { transform: translate(3px, 3px) }
+            80% { transform: translate(3px, -3px) }
             100% { transform: translate(0) }
         }
 
-        .floating {
-            animation: float 3s ease-in-out infinite;
+        .floating { animation: float 3s ease-in-out infinite; }
+        @keyframes float {
+            0% { transform: translateY(-50%) translateY(0px); }
+            50% { transform: translateY(-50%) translateY(-8px); }
+            100% { transform: translateY(-50%) translateY(0px); }
         }
 
-        @keyframes float {
-            0% { transform: translateY(0px); }
-            50% { transform: translateY(-10px); }
-            100% { transform: translateY(0px); }
-        }
+        /* Scrollbar personalizada */
+        .custom-scrollbar::-webkit-scrollbar { width: 8px; }
+        .custom-scrollbar::-webkit-scrollbar-track { background: rgba(0,0,0,0.3); border-radius: 4px; }
+        .custom-scrollbar::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.3); border-radius: 4px; }
+        .custom-scrollbar::-webkit-scrollbar-thumb:hover { background: rgba(255,255,255,0.6); }
     </style>
 </head>
 <body class="p-4 md:p-8 flex flex-col items-center">
     <div class="star-bg"></div>
 
-    <header class="text-center mb-8 w-full">
-        <h1 class="text-3xl md:text-5xl font-bold title-font text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-pink-600 mb-2 mt-4">
+    <header class="text-center mb-8 w-full px-4">
+        <h1 class="text-2xl md:text-4xl lg:text-5xl font-bold title-font text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-pink-600 mb-3 mt-4 leading-relaxed pb-2">
             🚀 Carrera Espacial 🛸
         </h1>
-        <p class="text-lg text-gray-300">¡Domina la multiplicación para llegar a las estrellas!</p>
+        <p class="text-base md:text-lg text-gray-300">¡Domina la multiplicación para llegar a las estrellas!</p>
     </header>
 
-    <main id="app-container" class="w-full max-w-6xl flex flex-col items-center">
+    <main id="app-container" class="w-full max-w-7xl flex flex-col items-center px-2">
         
         <!-- Vista Inicial: Elegir Rol -->
-        <div id="role-selection" class="flex flex-col items-center justify-center p-10 bg-gray-900 bg-opacity-70 rounded-2xl shadow-2xl border border-gray-700 w-full max-w-md">
-            <h2 class="text-2xl font-bold mb-8 text-center text-blue-300">¿Cómo quieres entrar?</h2>
-            <button onclick="selectRole('teacher')" class="btn-neon text-xl font-bold py-4 px-8 rounded-full mb-6 w-full flex items-center justify-center gap-3">
-                <i class="fas fa-chalkboard-teacher"></i> Vista de Maestro (Pizarra)
+        <div id="role-selection" class="flex flex-col items-center justify-center p-8 md:p-12 bg-gray-900 bg-opacity-80 rounded-3xl shadow-2xl border border-gray-700 w-full max-w-md transition-all">
+            <h2 class="text-2xl font-bold mb-8 text-center text-blue-300">¿Cómo deseas entrar?</h2>
+            <button onclick="selectRole('teacher')" class="btn-neon text-lg md:text-xl font-bold py-4 px-6 rounded-full mb-6 w-full flex items-center justify-center gap-3">
+                <i class="fas fa-chalkboard-teacher"></i> Vista de Maestro
             </button>
-            <button onclick="selectRole('student')" class="btn-neon text-xl font-bold py-4 px-8 rounded-full w-full flex items-center justify-center gap-3" style="border-color: #ff00ff; color: #ff00ff; box-shadow: 0 0 10px #ff00ff, inset 0 0 10px #ff00ff;">
-                <i class="fas fa-user-astronaut"></i> Vista de Estudiante (Jugar)
+            <button onclick="selectRole('student')" class="btn-neon text-lg md:text-xl font-bold py-4 px-6 rounded-full w-full flex items-center justify-center gap-3" style="border-color: #ff00ff; color: #ff00ff; box-shadow: 0 0 10px #ff00ff, inset 0 0 10px #ff00ff;">
+                <i class="fas fa-user-astronaut"></i> Vista de Estudiante
             </button>
         </div>
 
         <!-- Vista Estudiante: Unirse -->
-        <div id="student-join-view" class="hidden flex-col items-center justify-center p-8 bg-gray-900 bg-opacity-80 rounded-2xl shadow-2xl border border-gray-700 w-full max-w-md">
-            <h2 class="text-2xl font-bold mb-6 text-pink-400">¡Prepara tu nave!</h2>
-            <input type="text" id="player-name-input" placeholder="Tu Nombre o Apodo" class="w-full p-4 rounded-lg bg-gray-800 text-white border border-gray-600 focus:border-pink-500 focus:outline-none mb-6 text-xl text-center">
+        <div id="student-join-view" class="hidden flex-col items-center justify-center p-6 md:p-10 bg-gray-900 bg-opacity-90 rounded-3xl shadow-2xl border border-gray-700 w-full max-w-md">
+            <h2 class="text-2xl md:text-3xl font-bold mb-6 text-pink-400 text-center">¡Prepara tu nave!</h2>
             
-            <div class="mb-6 w-full">
-                <p class="text-center mb-2 text-gray-400">Elige tu nave:</p>
-                <div class="flex justify-center gap-4 text-3xl">
-                    <button class="ship-select bg-gray-800 p-3 rounded-lg border-2 border-transparent hover:border-pink-500 transition" onclick="selectShip('🚀')">🚀</button>
-                    <button class="ship-select bg-gray-800 p-3 rounded-lg border-2 border-transparent hover:border-pink-500 transition" onclick="selectShip('🛸')">🛸</button>
-                    <button class="ship-select bg-gray-800 p-3 rounded-lg border-2 border-transparent hover:border-pink-500 transition" onclick="selectShip('☄️')">☄️</button>
-                    <button class="ship-select bg-gray-800 p-3 rounded-lg border-2 border-transparent hover:border-pink-500 transition" onclick="selectShip('🛰️')">🛰️</button>
+            <label for="player-name-input" class="sr-only">Tu Nombre</label>
+            <input type="text" id="player-name-input" maxlength="15" placeholder="Tu Nombre (Ej. Alex)" class="w-full p-4 rounded-xl bg-gray-800 text-white border-2 border-gray-600 focus:border-pink-500 focus:ring-2 focus:ring-pink-500 outline-none mb-6 text-xl text-center transition-colors">
+            
+            <div class="mb-8 w-full">
+                <p class="text-center mb-4 text-gray-400 font-bold">Elige tu avatar espacial:</p>
+                <div class="flex justify-center gap-3 md:gap-4 text-3xl md:text-4xl">
+                    <button class="ship-select bg-gray-800 p-3 rounded-xl border-2 border-transparent hover:border-pink-500 hover:bg-gray-700 transition-all focus:outline-none" onclick="selectShip('🚀')" aria-label="Nave Cohete">🚀</button>
+                    <button class="ship-select bg-gray-800 p-3 rounded-xl border-2 border-transparent hover:border-pink-500 hover:bg-gray-700 transition-all focus:outline-none" onclick="selectShip('🛸')" aria-label="OVNI">🛸</button>
+                    <button class="ship-select bg-gray-800 p-3 rounded-xl border-2 border-transparent hover:border-pink-500 hover:bg-gray-700 transition-all focus:outline-none" onclick="selectShip('☄️')" aria-label="Cometa">☄️</button>
+                    <button class="ship-select bg-gray-800 p-3 rounded-xl border-2 border-transparent hover:border-pink-500 hover:bg-gray-700 transition-all focus:outline-none" onclick="selectShip('🛰️')" aria-label="Satélite">🛰️</button>
                 </div>
             </div>
 
-            <button onclick="joinGame()" class="w-full bg-gradient-to-r from-pink-500 to-purple-600 hover:from-pink-600 hover:to-purple-700 text-white font-bold py-4 px-8 rounded-full text-xl shadow-lg transition transform hover:scale-105">
-                ¡Entrar a la Carrera!
+            <button onclick="joinGame()" class="w-full bg-gradient-to-r from-pink-500 to-purple-600 hover:from-pink-600 hover:to-purple-700 text-white font-bold py-4 px-8 rounded-full text-xl shadow-lg transition transform hover:scale-105 active:scale-95 focus:outline-none">
+                ¡Despegar! <i class="fas fa-space-shuttle ml-2"></i>
             </button>
-            <button onclick="goBack()" class="mt-4 text-gray-400 hover:text-white underline">Volver</button>
+            <button onclick="goBack()" class="mt-6 text-gray-400 hover:text-white underline p-2 focus:outline-none">Volver al inicio</button>
         </div>
 
         <!-- Vista Estudiante: Jugando -->
         <div id="student-game-view" class="hidden flex-col items-center w-full max-w-lg">
-            
-            <div class="bg-gray-900 bg-opacity-80 p-6 rounded-2xl border border-gray-700 w-full mb-6 relative overflow-hidden shadow-2xl">
-                <div class="absolute top-0 right-0 p-2 bg-purple-600 text-xs font-bold rounded-bl-lg">Tu Puntuación: <span id="my-score">0</span></div>
+            <div class="bg-gray-900 bg-opacity-90 p-6 md:p-8 rounded-3xl border border-gray-700 w-full mb-6 relative overflow-hidden shadow-2xl">
+                <div class="absolute top-0 right-0 py-2 px-4 bg-purple-600 text-sm font-bold rounded-bl-2xl shadow-md">Puntos: <span id="my-score">0</span></div>
                 
-                <h2 class="text-xl text-center text-gray-400 mb-2">Resuelve rápido:</h2>
+                <h2 class="text-xl md:text-2xl text-center text-gray-400 mb-4 mt-2 font-bold">Misión Actual:</h2>
                 
-                <div class="flex justify-center items-center my-8">
-                    <div id="problem-display" class="text-6xl font-bold title-font text-white bg-gray-800 p-8 rounded-xl shadow-[inset_0px_0px_20px_rgba(0,0,0,0.8)] border border-gray-600 w-full text-center">
+                <div class="flex justify-center items-center my-6 md:my-8">
+                    <div id="problem-display" class="text-5xl md:text-7xl font-bold title-font text-white bg-gray-800 py-10 w-full rounded-2xl shadow-[inset_0px_0px_30px_rgba(0,0,0,0.8)] border-2 border-gray-600 text-center transition-colors duration-300">
                         ? x ?
                     </div>
                 </div>
 
-                <div id="options-container" class="grid grid-cols-2 gap-4 mt-6">
-                    <!-- Opciones generadas por JS -->
+                <div id="options-container" class="grid grid-cols-2 gap-4 md:gap-6 mt-6">
+                    <!-- Opciones generadas por JavaScript -->
                 </div>
                 
-                <div id="feedback-msg" class="h-8 mt-4 text-center font-bold text-lg opacity-0 transition-opacity"></div>
+                <div id="feedback-msg" class="h-10 mt-6 text-center font-bold text-xl opacity-0 transition-opacity flex items-center justify-center"></div>
             </div>
             
-            <div class="text-center text-sm text-gray-400 mt-4">
-                <p>Jugando como: <span id="playing-as" class="font-bold text-pink-400"></span></p>
-                <button onclick="quitGame()" class="mt-2 text-red-400 hover:text-red-300 underline">Salir del juego</button>
+            <div class="text-center text-sm md:text-base text-gray-400 mt-2 bg-gray-900 bg-opacity-70 px-6 py-3 rounded-full border border-gray-700 flex justify-between items-center w-full">
+                <p>Piloto: <span id="playing-as" class="font-bold text-pink-400 ml-1"></span></p>
+                <button onclick="quitGame()" class="text-red-400 hover:text-red-300 font-bold px-2 py-1 focus:outline-none"><i class="fas fa-sign-out-alt mr-1"></i> Salir</button>
             </div>
         </div>
 
-        <!-- Vista Maestro: Pizarra Principal -->
-        <div id="teacher-board-view" class="hidden w-full flex-col lg:flex-row gap-8">
+        <!-- Vista Maestro: Pizarra Principal (Optimizada para Proyección) -->
+        <div id="teacher-board-view" class="hidden w-full flex-col xl:flex-row gap-6 md:gap-8">
             
             <!-- Podium / Clasificación (Izquierda) -->
-            <div class="w-full lg:w-1/3 bg-gray-900 bg-opacity-80 rounded-2xl border border-gray-700 p-6 shadow-2xl flex flex-col">
-                <h2 class="text-2xl font-bold text-center mb-6 text-yellow-400 border-b border-gray-700 pb-2">
-                    <i class="fas fa-trophy mr-2"></i> Pizarra de Líderes
+            <div class="w-full xl:w-1/3 bg-gray-900 bg-opacity-90 rounded-3xl border border-gray-700 p-6 md:p-8 shadow-2xl flex flex-col h-[80vh] xl:h-auto">
+                <h2 class="text-2xl md:text-3xl font-bold text-center mb-6 text-yellow-400 border-b-2 border-gray-700 pb-4">
+                    <i class="fas fa-trophy mr-2"></i> Líderes
                 </h2>
                 
-                <div class="flex-grow flex flex-col justify-center gap-4" id="podium-container">
-                    <!-- Podium generado dinámicamente -->
-                    <div class="text-center text-gray-500 italic">Esperando jugadores...</div>
+                <div class="flex-grow flex flex-col gap-4 overflow-y-auto custom-scrollbar pr-2" id="podium-container">
+                    <div class="flex h-full items-center justify-center text-center text-gray-500 italic text-lg">
+                        Esperando que los astronautas se unan a la partida...
+                    </div>
                 </div>
 
-                <div class="mt-6 pt-4 border-t border-gray-700 text-center">
-                    <button onclick="resetGame()" class="px-4 py-2 bg-red-600 hover:bg-red-700 text-white rounded font-bold transition text-sm">
-                        <i class="fas fa-redo mr-1"></i> Reiniciar Puntuaciones
+                <div class="mt-6 pt-6 border-t-2 border-gray-700 text-center">
+                    <button onclick="resetGame()" class="w-full md:w-auto px-6 py-3 bg-red-600 hover:bg-red-700 text-white rounded-xl font-bold transition shadow-lg flex items-center justify-center mx-auto focus:outline-none">
+                        <i class="fas fa-power-off mr-2"></i> Reiniciar Partida
                     </button>
-                    <p class="text-xs text-gray-500 mt-2">Comparte el enlace con tus estudiantes para que se unan.</p>
+                    <p class="text-sm text-gray-400 mt-4">Los estudiantes no necesitan salir de la app.</p>
                 </div>
             </div>
 
             <!-- Pista de Carreras (Derecha) -->
-            <div class="w-full lg:w-2/3 bg-gray-900 bg-opacity-80 rounded-2xl border border-gray-700 p-6 shadow-2xl overflow-hidden relative">
-                <h2 class="text-xl font-bold text-center mb-4 text-blue-300">Carrera en Vivo</h2>
-                <div class="absolute top-0 bottom-0 right-10 w-2 border-r-4 border-dashed border-yellow-500 z-0"></div> <!-- Línea de meta -->
-                <div class="absolute top-4 right-2 text-yellow-500 text-xs font-bold bg-black bg-opacity-50 px-2 rounded">META (1000 pts)</div>
+            <div class="w-full xl:w-2/3 bg-gray-900 bg-opacity-90 rounded-3xl border border-gray-700 p-6 md:p-8 shadow-2xl overflow-hidden relative flex flex-col h-[60vh] xl:h-auto min-h-[500px]">
+                <h2 class="text-2xl md:text-3xl font-bold text-center mb-6 text-blue-300">Pista Galáctica en Vivo</h2>
                 
-                <div id="race-track-container" class="mt-8 relative z-10 space-y-4 max-h-[60vh] overflow-y-auto pr-2 custom-scrollbar">
+                <div class="absolute top-0 bottom-0 right-[10%] w-2 border-r-4 border-dashed border-yellow-500 z-0 opacity-70"></div> <!-- Línea de meta -->
+                <div class="absolute top-6 right-[2%] text-yellow-500 text-sm md:text-base font-bold bg-black bg-opacity-80 px-4 py-1 rounded-full border border-yellow-600 z-20">META (1000 pts)</div>
+                
+                <div id="race-track-container" class="mt-4 relative z-10 flex-grow overflow-y-auto pr-4 custom-scrollbar flex flex-col justify-start">
                     <!-- Pistas generadas dinámicamente -->
-                    <div class="text-center text-gray-500 italic mt-10">Ningún astronauta ha despegado aún...</div>
+                    <div class="flex h-full items-center justify-center text-center text-gray-500 italic text-lg mt-10">
+                        La carrera comenzará en breve...
+                    </div>
                 </div>
             </div>
         </div>
 
     </main>
 
-    <!-- Modal Messages -->
-    <div id="message-modal" class="fixed inset-0 bg-black bg-opacity-70 flex items-center justify-center hidden z-50">
-        <div class="bg-gray-800 border border-gray-600 p-8 rounded-2xl shadow-2xl max-w-sm w-full text-center transform transition-all scale-95 opacity-0" id="message-modal-content">
-            <h3 class="text-2xl font-bold mb-4" id="modal-title">Mensaje</h3>
-            <p class="text-gray-300 mb-6" id="modal-text">Detalles aquí.</p>
-            <button onclick="closeModal()" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-6 rounded-full transition">Entendido</button>
+    <!-- Modal Dialog UI -->
+    <div id="message-modal" class="fixed inset-0 bg-black bg-opacity-80 flex items-center justify-center hidden z-50 p-4 backdrop-blur-sm transition-opacity">
+        <div class="bg-gray-800 border-2 border-gray-600 p-8 rounded-3xl shadow-2xl max-w-sm w-full text-center transform transition-all scale-95 opacity-0" id="message-modal-content">
+            <div class="text-4xl mb-4 text-blue-400"><i class="fas fa-info-circle"></i></div>
+            <h3 class="text-2xl font-bold mb-4 text-white" id="modal-title">Mensaje</h3>
+            <p class="text-gray-300 mb-8 text-lg" id="modal-text">Detalles del mensaje.</p>
+            <button onclick="closeModal()" class="w-full bg-blue-600 hover:bg-blue-500 text-white font-bold py-3 px-6 rounded-full transition focus:outline-none focus:ring-4 focus:ring-blue-800">
+                Entendido
+            </button>
         </div>
     </div>
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
         import { getAuth, signInAnonymously, signInWithCustomToken, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
-        import { getFirestore, doc, setDoc, onSnapshot, collection, query, addDoc, updateDoc, deleteDoc, getDocs } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+        import { getFirestore, doc, setDoc, onSnapshot, collection, addDoc, updateDoc, deleteDoc, getDocs } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
 
-        // Firebase Config Setup
+        // Configuración segura del entorno proporcionado
         const appId = typeof __app_id !== 'undefined' ? __app_id : 'multiplication-race-app';
         let firebaseConfig;
         
         try {
             firebaseConfig = typeof __firebase_config !== 'undefined' ? JSON.parse(__firebase_config) : {
-                // Dummy config for fallback if needed, though usually provided by env
                 apiKey: "dummy", authDomain: "dummy", projectId: "dummy", storageBucket: "dummy", messagingSenderId: "dummy", appId: "dummy"
             };
         } catch (e) {
-            console.error("Error parsing firebase config", e);
-            showModal("Error", "No se pudo configurar la base de datos.");
+            console.error("Error al parsear firebase config", e);
+            showModal("Error Crítico", "No se pudo configurar la base de datos de producción.");
         }
 
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
         const auth = getAuth(app);
 
-        // State Variables
+        // Variables de Estado Globales
         let currentUser = null;
-        let userRole = null; // 'teacher' or 'student'
         let currentProblem = {};
         let myScore = 0;
         let myShipIcon = '🚀';
@@ -247,7 +265,6 @@
         let playersUnsubscribe = null;
         const WINNING_SCORE = 1000;
 
-        // Initialize Auth
         async function initAuth() {
             try {
                 if (typeof __initial_auth_token !== 'undefined' && __initial_auth_token) {
@@ -256,26 +273,23 @@
                     await signInAnonymously(auth);
                 }
             } catch (error) {
-                console.error("Auth Error:", error);
-                showModal("Error de Conexión", "No pudimos conectarte a los servidores del juego.");
+                console.error("Error de Autenticación:", error);
+                showModal("Error de Conexión", "No pudimos conectarte a los servidores del juego. Por favor recarga la página.");
             }
         }
 
         onAuthStateChanged(auth, (user) => {
             if (user) {
                 currentUser = user;
-                console.log("Authenticated as:", user.uid);
             } else {
                 currentUser = null;
             }
         });
 
-        // Initialize App
         initAuth();
 
-        // UI Functions
+        // Funciones de UI Globales
         window.selectRole = (role) => {
-            userRole = role;
             document.getElementById('role-selection').classList.add('hidden');
             
             if (role === 'student') {
@@ -297,15 +311,14 @@
         window.selectShip = (icon) => {
             myShipIcon = icon;
             document.querySelectorAll('.ship-select').forEach(el => {
-                el.classList.remove('border-pink-500', 'bg-gray-700');
+                el.classList.remove('border-pink-500', 'bg-gray-700', 'scale-110');
                 el.classList.add('border-transparent');
                 if(el.innerText === icon) {
-                    el.classList.add('border-pink-500', 'bg-gray-700');
+                    el.classList.add('border-pink-500', 'bg-gray-700', 'scale-110');
                 }
             });
         };
 
-        // Modal Custom
         window.showModal = (title, text) => {
             const modal = document.getElementById('message-modal');
             const content = document.getElementById('message-modal-content');
@@ -328,22 +341,22 @@
             }, 300);
         };
 
-        // Student Game Logic
+        // Lógica del Estudiante
         window.joinGame = async () => {
             const nameInput = document.getElementById('player-name-input').value.trim();
             if (!nameInput) {
-                showModal("Falta tu nombre", "Por favor ingresa un nombre para jugar.");
+                showModal("Información Incompleta", "Por favor, ingresa tu nombre de piloto para continuar.");
                 return;
             }
             if (!currentUser) {
-                showModal("Espera", "Conectando al servidor...");
+                showModal("Conectando...", "Aún estamos conectando con la estación espacial. Intenta en un segundo.");
                 return;
             }
 
             myName = nameInput;
             myScore = 0;
 
-            // Save player to Firestore (Public Data so teacher can see)
+            // Ruta estricta de Firestore para datos públicos: /artifacts/{appId}/public/data/{collectionName}
             const playerRef = doc(db, 'artifacts', appId, 'public', 'data', 'players', currentUser.uid);
             try {
                 await setDoc(playerRef, {
@@ -353,7 +366,6 @@
                     lastUpdate: Date.now()
                 });
 
-                // Update UI
                 document.getElementById('student-join-view').classList.add('hidden');
                 document.getElementById('student-join-view').classList.remove('flex');
                 document.getElementById('student-game-view').classList.remove('hidden');
@@ -365,8 +377,8 @@
                 generateProblem();
                 
             } catch (error) {
-                console.error("Error joining game:", error);
-                showModal("Error", "No pudimos registrarte en la carrera.");
+                console.error("Error al unirse a la partida:", error);
+                showModal("Error de Registro", "No pudimos inscribirte en la carrera. Verifica tu conexión.");
             }
         };
 
@@ -375,37 +387,36 @@
                 const playerRef = doc(db, 'artifacts', appId, 'public', 'data', 'players', currentUser.uid);
                 try {
                     await deleteDoc(playerRef);
-                } catch(e) { console.error(e); }
+                } catch(e) { console.error("Error al salir", e); }
             }
             
             document.getElementById('student-game-view').classList.add('hidden');
             document.getElementById('student-game-view').classList.remove('flex');
             document.getElementById('role-selection').classList.remove('hidden');
             myScore = 0;
+            document.getElementById('player-name-input').value = '';
         };
 
         function generateProblem() {
-            // 1-digit multiplication (1 to 9)
+            // Multiplicación de 1 dígito (1 al 9)
             const num1 = Math.floor(Math.random() * 9) + 1;
             const num2 = Math.floor(Math.random() * 9) + 1;
             const correctAnswer = num1 * num2;
 
             currentProblem = { num1, num2, answer: correctAnswer };
-
             document.getElementById('problem-display').innerText = `${num1} x ${num2}`;
 
-            // Generate options
+            // Generación inteligente de distractores
             let options = new Set([correctAnswer]);
             while(options.size < 4) {
-                // Generate plausible distractors
                 const variation = Math.floor(Math.random() * 3);
                 let wrongAnswer;
                 if (variation === 0) {
-                    wrongAnswer = (num1 + (Math.random() > 0.5 ? 1 : -1)) * num2;
+                    wrongAnswer = (num1 + (Math.random() > 0.5 ? 1 : -1)) * num2; // Error de un multiplicando
                 } else if (variation === 1) {
-                    wrongAnswer = num1 * (num2 + (Math.random() > 0.5 ? 1 : -1));
+                    wrongAnswer = num1 * (num2 + (Math.random() > 0.5 ? 1 : -1)); // Error del otro multiplicando
                 } else {
-                    wrongAnswer = correctAnswer + (Math.floor(Math.random() * 10) - 5);
+                    wrongAnswer = correctAnswer + (Math.floor(Math.random() * 10) - 5); // Error cercano aleatorio
                 }
                 
                 if(wrongAnswer > 0 && wrongAnswer !== correctAnswer) {
@@ -413,15 +424,13 @@
                 }
             }
 
-            // Shuffle options
             const shuffledOptions = Array.from(options).sort(() => Math.random() - 0.5);
-
             const optionsContainer = document.getElementById('options-container');
             optionsContainer.innerHTML = '';
             
             shuffledOptions.forEach(opt => {
                 const btn = document.createElement('button');
-                btn.className = 'bg-gray-800 border-2 border-gray-600 hover:border-blue-400 hover:bg-gray-700 text-white font-bold py-6 px-4 rounded-xl text-3xl transition shadow-md';
+                btn.className = 'bg-gray-800 border-2 border-gray-600 hover:border-blue-400 hover:bg-gray-700 focus:outline-none focus:ring-4 focus:ring-blue-500 text-white font-bold py-6 px-4 rounded-2xl text-4xl transition-all shadow-md transform hover:-translate-y-1';
                 btn.innerText = opt;
                 btn.onclick = () => checkAnswer(opt, btn);
                 optionsContainer.appendChild(btn);
@@ -431,24 +440,26 @@
         async function checkAnswer(selected, btnElement) {
             const feedback = document.getElementById('feedback-msg');
             const problemDisplay = document.getElementById('problem-display');
-
-            // Disable all buttons briefly
             const buttons = document.querySelectorAll('#options-container button');
+            
+            // Bloquear botones temporalmente para evitar spam
             buttons.forEach(b => b.disabled = true);
 
             if (selected === currentProblem.answer) {
-                // Correct
+                // Respuesta Correcta
                 btnElement.classList.replace('border-gray-600', 'border-green-500');
+                btnElement.classList.replace('hover:border-blue-400', 'border-green-500');
                 btnElement.classList.replace('bg-gray-800', 'bg-green-900');
-                problemDisplay.classList.add('text-green-400');
+                problemDisplay.classList.add('text-green-400', 'border-green-500', 'bg-green-900', 'bg-opacity-20');
                 
-                feedback.innerText = '¡Correcto! +10';
-                feedback.className = 'h-8 mt-4 text-center font-bold text-lg text-green-400 opacity-100 transition-opacity';
+                feedback.innerHTML = '<i class="fas fa-check-circle mr-2"></i> ¡Excelente! +10';
+                feedback.className = 'h-10 mt-6 flex items-center justify-center font-bold text-xl text-green-400 opacity-100 transition-opacity';
                 
                 myScore += 10;
+                // Prevenir que el puntaje pase el máximo en UI
+                if(myScore > WINNING_SCORE) myScore = WINNING_SCORE;
                 document.getElementById('my-score').innerText = myScore;
 
-                // Update Firestore
                 if (currentUser) {
                     const playerRef = doc(db, 'artifacts', appId, 'public', 'data', 'players', currentUser.uid);
                     try {
@@ -456,55 +467,64 @@
                             score: myScore,
                             lastUpdate: Date.now()
                         });
-                    } catch (e) { console.error("Error updating score", e); }
+                    } catch (e) { console.error("Error actualizando puntaje", e); }
                 }
 
                 setTimeout(() => {
-                    problemDisplay.classList.remove('text-green-400');
+                    problemDisplay.classList.remove('text-green-400', 'border-green-500', 'bg-green-900', 'bg-opacity-20');
                     feedback.classList.replace('opacity-100', 'opacity-0');
-                    generateProblem();
-                }, 800);
+                    if(myScore < WINNING_SCORE) {
+                        generateProblem();
+                    } else {
+                        showModal("¡Llegaste a la meta!", "Has completado la carrera espacial. ¡Felicidades!");
+                        buttons.forEach(b => b.disabled = false); // Habilitar si se resetea después
+                    }
+                }, 1000);
 
             } else {
-                // Incorrect
+                // Respuesta Incorrecta
                 btnElement.classList.replace('border-gray-600', 'border-red-500');
+                btnElement.classList.replace('hover:border-blue-400', 'border-red-500');
                 btnElement.classList.replace('bg-gray-800', 'bg-red-900');
                 btnElement.classList.add('vibrate');
-                problemDisplay.classList.add('text-red-400');
+                problemDisplay.classList.add('text-red-400', 'border-red-500');
 
-                feedback.innerText = '¡Ups! Intenta de nuevo.';
-                feedback.className = 'h-8 mt-4 text-center font-bold text-lg text-red-400 opacity-100 transition-opacity';
+                feedback.innerHTML = '<i class="fas fa-times-circle mr-2"></i> ¡Ups! Intenta de nuevo.';
+                feedback.className = 'h-10 mt-6 flex items-center justify-center font-bold text-xl text-red-400 opacity-100 transition-opacity';
 
                 setTimeout(() => {
                     btnElement.classList.replace('border-red-500', 'border-gray-600');
                     btnElement.classList.replace('bg-red-900', 'bg-gray-800');
+                    btnElement.classList.add('hover:border-blue-400');
                     btnElement.classList.remove('vibrate');
-                    problemDisplay.classList.remove('text-red-400');
+                    problemDisplay.classList.remove('text-red-400', 'border-red-500');
                     feedback.classList.replace('opacity-100', 'opacity-0');
                     buttons.forEach(b => b.disabled = false);
-                }, 800);
+                }, 1200);
             }
         }
 
-        // Teacher / Board Logic
+        // Lógica del Maestro / Pizarra
         function startListeningToPlayers() {
             if (!currentUser) return;
 
             const playersCol = collection(db, 'artifacts', appId, 'public', 'data', 'players');
             
+            // Requisito: Todo onSnapshot debe tener callback de error
             playersUnsubscribe = onSnapshot(playersCol, (snapshot) => {
                 let players = [];
                 snapshot.forEach(doc => {
                     players.push({ id: doc.id, ...doc.data() });
                 });
 
-                // Sort by score descending
+                // Ordenar por puntuación descendente en memoria (evita errores de índices de Firebase)
                 players.sort((a, b) => b.score - a.score);
 
                 updateTeacherBoard(players);
 
             }, (error) => {
-                console.error("Error listening to players:", error);
+                console.error("Error sincronizando jugadores:", error);
+                showModal("Error de Sincronización", "Perdimos la conexión con la carrera. Intentando reconectar...");
             });
         }
 
@@ -513,67 +533,68 @@
             const podiumContainer = document.getElementById('podium-container');
 
             if (players.length === 0) {
-                trackContainer.innerHTML = '<div class="text-center text-gray-500 italic mt-10">Ningún astronauta ha despegado aún...</div>';
-                podiumContainer.innerHTML = '<div class="text-center text-gray-500 italic">Esperando jugadores...</div>';
+                trackContainer.innerHTML = '<div class="flex h-full items-center justify-center text-center text-gray-500 italic text-lg mt-10">La pista está vacía. ¡Comparte el juego!</div>';
+                podiumContainer.innerHTML = '<div class="flex h-full items-center justify-center text-center text-gray-500 italic text-lg">Esperando que los astronautas se unan...</div>';
                 return;
             }
 
-            // Update Tracks
+            // --- Actualizar Pista de Carreras ---
             trackContainer.innerHTML = '';
             players.forEach(player => {
-                // Calculate position percentage (max WINNING_SCORE)
+                // Calcular porcentaje visual, dejando un margen para que la nave parezca tocar la meta
                 let progressPercent = (player.score / WINNING_SCORE) * 100;
                 if (progressPercent > 100) progressPercent = 100;
-                // Adjust so ship stops before edge
-                const visualPercent = progressPercent * 0.9; 
+                const visualPercent = progressPercent * 0.85; // Max 85% para alinear con la línea de meta
 
                 const trackHTML = `
-                    <div class="ship-track">
-                        <div class="absolute left-0 bottom-1 text-xs text-gray-400 font-bold w-24 truncate" title="${player.name}">${player.name}</div>
+                    <div class="ship-track flex-shrink-0">
+                        <div class="absolute left-0 bottom-2 text-sm text-gray-300 font-bold w-24 truncate z-20 bg-gray-900 bg-opacity-60 px-1 rounded" title="${player.name}">${player.name}</div>
                         <div class="ship floating" style="left: ${visualPercent}%;">
                             ${player.icon}
-                            <span class="absolute -top-4 left-1/2 transform -translate-x-1/2 text-[10px] bg-black bg-opacity-70 px-1 rounded text-white">${player.score}</span>
+                            <span class="absolute -top-5 left-1/2 transform -translate-x-1/2 text-xs font-bold bg-purple-700 bg-opacity-90 px-2 py-0.5 rounded-full text-white border border-purple-500 shadow-md">
+                                ${player.score}
+                            </span>
                         </div>
                     </div>
                 `;
                 trackContainer.insertAdjacentHTML('beforeend', trackHTML);
             });
 
-            // Update Podium
+            // --- Actualizar Podio ---
             podiumContainer.innerHTML = '';
             
             const topPlayers = players.slice(0, 3);
             const medals = [
-                { class: 'medal-gold text-4xl', icon: 'fa-medal', name: 'Oro' },
-                { class: 'medal-silver text-3xl', icon: 'fa-medal', name: 'Plata' },
-                { class: 'medal-bronze text-2xl', icon: 'fa-medal', name: 'Bronce' }
+                { class: 'medal-gold text-5xl', icon: 'fa-medal', border: 'border-yellow-500', bg: 'bg-yellow-900' },
+                { class: 'medal-silver text-4xl', icon: 'fa-medal', border: 'border-gray-400', bg: 'bg-gray-800' },
+                { class: 'medal-bronze text-3xl', icon: 'fa-medal', border: 'border-orange-700', bg: 'bg-orange-900' }
             ];
 
             if(topPlayers.length > 0) {
-                let podiumHTML = '<div class="flex flex-col gap-3">';
+                let podiumHTML = '<div class="flex flex-col gap-4">';
                 topPlayers.forEach((player, index) => {
                     const medal = medals[index];
                     podiumHTML += `
-                        <div class="flex items-center justify-between bg-gray-800 p-3 rounded-xl border border-gray-700 shadow-md transform transition hover:scale-105">
-                            <div class="flex items-center gap-3">
-                                <i class="fas ${medal.icon} ${medal.class}"></i>
-                                <span class="text-2xl">${player.icon}</span>
-                                <span class="font-bold text-lg text-white truncate max-w-[120px]" title="${player.name}">${player.name}</span>
+                        <div class="flex items-center justify-between ${medal.bg} bg-opacity-40 p-4 rounded-2xl border-2 ${medal.border} shadow-lg transform transition hover:scale-105">
+                            <div class="flex items-center gap-4">
+                                <div class="w-12 text-center"><i class="fas ${medal.icon} ${medal.class}"></i></div>
+                                <span class="text-3xl">${player.icon}</span>
+                                <span class="font-bold text-xl text-white truncate max-w-[150px] md:max-w-[200px]" title="${player.name}">${player.name}</span>
                             </div>
-                            <div class="font-mono text-xl text-blue-300 bg-gray-900 px-3 py-1 rounded-lg">${player.score} pts</div>
+                            <div class="font-mono font-bold text-2xl text-white bg-black bg-opacity-50 px-4 py-2 rounded-xl shadow-inner">${player.score}</div>
                         </div>
                     `;
                 });
                 podiumHTML += '</div>';
                 
-                // Add runner-ups if more than 3 players
+                // Mostrar corredores restantes (4to lugar en adelante)
                 if(players.length > 3) {
-                    podiumHTML += '<div class="mt-4 pt-4 border-t border-gray-700 max-h-32 overflow-y-auto custom-scrollbar">';
+                    podiumHTML += '<div class="mt-6 pt-4 border-t-2 border-gray-700 overflow-y-auto pr-2 custom-scrollbar">';
                     for(let i=3; i<players.length; i++) {
                          podiumHTML += `
-                            <div class="flex justify-between text-sm text-gray-400 mb-2 px-2">
-                                <span>${i+1}. ${players[i].icon} ${players[i].name}</span>
-                                <span>${players[i].score}</span>
+                            <div class="flex justify-between items-center text-base text-gray-300 mb-3 bg-gray-800 p-3 rounded-lg border border-gray-700">
+                                <span class="font-bold"><span class="text-gray-500 mr-2">#${i+1}</span> ${players[i].icon} ${players[i].name}</span>
+                                <span class="font-mono text-blue-300">${players[i].score} pts</span>
                             </div>
                          `;
                     }
@@ -587,46 +608,49 @@
         window.resetGame = async () => {
             if (!currentUser) return;
             
-            // Note: In a real secure app, only a teacher auth token should be able to do this.
-            // For this immersive, we'll allow the client acting as teacher to reset scores.
-            if(confirm("¿Estás seguro de que quieres reiniciar las puntuaciones de todos los jugadores a cero?")) {
+            // Crear nuestro propio modal de confirmación reemplazando "confirm()"
+            const confirmModal = document.createElement('div');
+            confirmModal.className = 'fixed inset-0 bg-black bg-opacity-80 flex items-center justify-center z-[60] p-4 backdrop-blur-sm transition-opacity';
+            confirmModal.innerHTML = `
+                <div class="bg-gray-800 border-2 border-red-600 p-8 rounded-3xl shadow-2xl max-w-md w-full text-center">
+                    <div class="text-5xl mb-4 text-red-500"><i class="fas fa-exclamation-triangle"></i></div>
+                    <h3 class="text-2xl font-bold mb-4 text-white">¿Reiniciar Puntuaciones?</h3>
+                    <p class="text-gray-300 mb-8 text-lg">Esto pondrá a todos los astronautas de vuelta en la línea de salida con 0 puntos.</p>
+                    <div class="flex gap-4">
+                        <button id="btn-cancel-reset" class="w-1/2 bg-gray-600 hover:bg-gray-500 text-white font-bold py-3 px-4 rounded-xl transition">Cancelar</button>
+                        <button id="btn-confirm-reset" class="w-1/2 bg-red-600 hover:bg-red-500 text-white font-bold py-3 px-4 rounded-xl transition shadow-[0_0_15px_rgba(220,38,38,0.5)]">Sí, Reiniciar</button>
+                    </div>
+                </div>
+            `;
+            document.body.appendChild(confirmModal);
+
+            document.getElementById('btn-cancel-reset').onclick = () => {
+                document.body.removeChild(confirmModal);
+            };
+
+            document.getElementById('btn-confirm-reset').onclick = async () => {
+                document.body.removeChild(confirmModal);
+                
                 try {
                     const playersCol = collection(db, 'artifacts', appId, 'public', 'data', 'players');
                     const snapshot = await getDocs(playersCol);
                     
-                    snapshot.forEach(async (docSnap) => {
-                        await updateDoc(docSnap.ref, { score: 0, lastUpdate: Date.now() });
+                    const updatePromises = [];
+                    snapshot.forEach((docSnap) => {
+                        updatePromises.push(updateDoc(docSnap.ref, { score: 0, lastUpdate: Date.now() }));
                     });
                     
-                    showModal("Éxito", "Las puntuaciones han sido reiniciadas. ¡Nueva carrera!");
+                    await Promise.all(updatePromises);
+                    showModal("¡Nueva Carrera!", "Las puntuaciones están en cero. ¡Prepárense para el despegue!");
                 } catch (e) {
-                    console.error("Error resetting", e);
-                    showModal("Error", "No se pudieron reiniciar las puntuaciones.");
+                    console.error("Error reiniciando puntuaciones", e);
+                    showModal("Error", "No se pudieron reiniciar las puntuaciones. Verifica tu conexión.");
                 }
-            }
+            };
         };
 
-        // Initialize first ship as selected visually
+        // Seleccionar la primera nave por defecto
         selectShip('🚀');
-
     </script>
-    
-    <style>
-        /* Custom scrollbar for inner areas */
-        .custom-scrollbar::-webkit-scrollbar {
-            width: 6px;
-        }
-        .custom-scrollbar::-webkit-scrollbar-track {
-            background: rgba(0,0,0,0.2); 
-            border-radius: 4px;
-        }
-        .custom-scrollbar::-webkit-scrollbar-thumb {
-            background: rgba(255,255,255,0.2); 
-            border-radius: 4px;
-        }
-        .custom-scrollbar::-webkit-scrollbar-thumb:hover {
-            background: rgba(255,255,255,0.4); 
-        }
-    </style>
 </body>
 </html>
