@@ -236,23 +236,27 @@
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
-        import { getAuth, signInAnonymously, signInWithCustomToken, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+        import { getAnalytics } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-analytics.js";
+        import { getAuth, signInAnonymously, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
         import { getFirestore, doc, setDoc, onSnapshot, collection, addDoc, updateDoc, deleteDoc, getDocs } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
 
-        // Configuración segura del entorno proporcionado
+        // ID del juego (se usa para organizar las carpetas en tu base de datos)
         const appId = typeof __app_id !== 'undefined' ? __app_id : 'multiplication-race-app';
-        let firebaseConfig;
         
-        try {
-            firebaseConfig = typeof __firebase_config !== 'undefined' ? JSON.parse(__firebase_config) : {
-                apiKey: "dummy", authDomain: "dummy", projectId: "dummy", storageBucket: "dummy", messagingSenderId: "dummy", appId: "dummy"
-            };
-        } catch (e) {
-            console.error("Error al parsear firebase config", e);
-            showModal("Error Crítico", "No se pudo configurar la base de datos de producción.");
-        }
+        // Tu configuración real de Firebase
+        const firebaseConfig = {
+            apiKey: "AIzaSyCFEzOCEWPcV0tjprTZ33R9XvTWd-R2n7Q",
+            authDomain: "baseparajuegos-6305c.firebaseapp.com",
+            projectId: "baseparajuegos-6305c",
+            storageBucket: "baseparajuegos-6305c.firebasestorage.app",
+            messagingSenderId: "397669851624",
+            appId: "1:397669851624:web:ff3a267b6929ba4f94045d",
+            measurementId: "G-REZJRN785D"
+        };
 
+        // Inicializar Firebase
         const app = initializeApp(firebaseConfig);
+        const analytics = getAnalytics(app); // Google Analytics activado
         const db = getFirestore(app);
         const auth = getAuth(app);
 
@@ -267,14 +271,11 @@
 
         async function initAuth() {
             try {
-                if (typeof __initial_auth_token !== 'undefined' && __initial_auth_token) {
-                    await signInWithCustomToken(auth, __initial_auth_token);
-                } else {
-                    await signInAnonymously(auth);
-                }
+                // Forzamos el uso exclusivo de Autenticación Anónima para tu proyecto real
+                await signInAnonymously(auth);
             } catch (error) {
                 console.error("Error de Autenticación:", error);
-                showModal("Error de Conexión", "No pudimos conectarte a los servidores del juego. Por favor recarga la página.");
+                showModal("Error de Autenticación", "Asegúrate de haber habilitado el método de acceso 'Anónimo' en la consola de Firebase Authentication.");
             }
         }
 
